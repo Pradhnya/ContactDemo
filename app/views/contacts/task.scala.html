@@ -1,0 +1,34 @@
+@(tasks: List[Task], taskForm: Form[Task])
+
+@import helper._
+
+@main("List of tasks") {
+<div class="formborder">
+    <fieldset>
+        <h1>@tasks.size() task(s)</h1>
+
+        <ul>
+            @for(task <- tasks) {
+
+            @task.name
+
+            @form(routes.Tasks.deleteTask(task.id)) {
+            <input type="submit" value="Delete">
+            }
+            </li>
+            }
+        </ul>
+    </fieldset>
+    <fieldset>
+        <h2>Add a new task</h2>
+
+        @form(routes.Tasks.createTask()) {
+
+        @inputText(taskForm("name"))
+
+        <input type="submit" value="Create">
+    </fieldset>
+</div>
+}
+
+}

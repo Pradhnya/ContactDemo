@@ -1,0 +1,579 @@
+@(contactForm: Form[Contacts])
+@import helper._
+@import helper.twitterBootstrap._
+@main("Contact form") {
+<h1 class="h1 formborder">Contact form</h1>
+<script src="@routes.Assets.at(" javascripts/jquery.min.js")"  type="text/javascript" ></script>
+<script src="@routes.Assets.at("javascripts/highcharts.js")"  type="text/javascript" ></script>
+<script src="@routes.Assets.at(" javascripts/exporting.js")"  type="text/javascript" ></script>
+<body>
+<div class="chartGender">
+<script>
+$(document).ready(function(){
+    console.log("Debug1");
+    $.ajax({
+        type :  "GET",
+        dataType: 'json',
+        data: JSON.stringify({}),
+        contentType: "application/json; charset=utf-8",
+        url  :  "@routes.Contacts.getContact()",
+        success: function(response){
+            console.log(response);
+
+            $('#genderChartContainer').highcharts({
+                chart: {
+                     renderTo: 'genderChartContainer',
+                     type: 'column'
+                },
+                title: {
+                      text: 'Gender ratio'
+                },
+                subtitle: {
+                      text: 'Source: <a href="http://localhost:9000/contacts/getCount/">Sex Ratio</a>'
+                },
+                xAxis: {
+                    type: 'category',
+                    labels: {
+                        rotation: -45,
+                        style: {
+                            fontSize: '13px',
+                            fontFamily: 'Verdana, sans-serif'
+                        }
+                    }
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Population (Number of people)'
+                    }
+                },
+                legend: {
+                    enabled: true
+                },
+                tooltip: {
+                    pointFormat: 'Population in 2008: <b>{point.y:.1f} millions</b>'
+                },
+                series: [{
+                    name: 'Population',
+                    data: [
+                        ['Male', response.Male],
+                        ['Female', response.Female]
+                    ],
+                    dataLabels: {
+                        enabled: true,
+                        rotation: -90,
+                        color: '#FFFFFF',
+                        align: 'right',
+                        format: '{point.y:.1f}', // one decimal
+                        y: 10, // 10 pixels down from the top
+                        style: {
+                            fontSize: '13px',
+                            fontFamily: 'Verdana, sans-serif'
+                        }
+                    }
+                }]
+            });
+        }//end of success
+    });  //End of ajax
+
+    $.ajax({
+        type :  "GET",
+        dataType: 'json',
+        data: JSON.stringify({}),
+        contentType: "application/json; charset=utf-8",
+        url  :  "@routes.Contacts.getMessage()",
+        success: function(responseOne){
+            $('#salaryMessageContainer').highcharts({
+                chart: {
+                    renderTo: 'salaryMessageContainer',
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Message Details'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: true
+                    }
+                },
+                series: [{
+                    name: "Message",
+                    colorByPoint: true,
+                    data: [{
+                        name: "Delivered",
+                        y: responseOne.Delivered
+                    },
+                    {
+                        name: "Not delivered",
+                        y: responseOne.Not_Delivered,
+                        sliced: true,
+                        selected: true
+                    }]
+                }]
+            });
+        }//end of success
+    });  //End of ajax
+    $.ajax({
+        type :  "GET",
+        dataType: 'json',
+        data: JSON.stringify({}),
+        contentType: "application/json; charset=utf-8",
+        url  :  "@routes.Contacts.getMessage()",
+        success: function(responseThree){
+            $('#messageChartContainer').highcharts({
+                chart: {
+                    renderTo: 'messageChartContainer',
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Message Details'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: true
+                    }
+                },
+                series: [{
+                    name: "Message",
+                    colorByPoint: true,
+                    data: [{
+                        name: "Delivered",
+                        y: responseThree.Delivered
+                    },
+                    {
+                        name: "Not delivered",
+                        y: responseThree.Not_Delivered,
+                        sliced: true,
+                        selected: true
+                    }]
+                }]
+            });
+        }//end of success
+    });
+    $.ajax({
+        type: "POST",
+        url: "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=hello&rsz=8",
+        contentType: "application/json; charset=utf-8",
+        dataType: "jsonp",
+        success: function (data) {
+            var height=[],width=[],imageName=[];
+            for(i=0;i<data.responseData.results.length;i++)
+            {
+                height.push(parseInt(data.responseData.results[i].height));
+                width.push(parseInt(data.responseData.results[i].width));
+                imageName.push(data.responseData.results[i].contentNoFormatting);
+            }
+            //alert(height);
+            $('#heightWidthContainer').highcharts({
+                chart: {
+                    renderTo: 'heightWidthContainer',
+                    type: 'column'
+                },
+                title: {
+                    text: 'Height Width Details chart'
+                },
+                xAxis: {
+                    categories: imageName
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Image Description'
+                    },
+                    stackLabels: {
+                        enabled: true,
+                        style: {
+                            fontWeight: 'bold',
+                            color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                        }
+                    }
+                },
+                legend: {
+                    align: 'right',
+                    x: -30,
+                    verticalAlign: 'top',
+                    y: 25,
+                    floating: true,
+                    backgroundColor: '#FCFFC5',
+                    borderColor: '#C98657',
+                    borderWidth: 1,
+                    shadow: false
+                },
+                tooltip: {
+                    formatter: function () {
+                        return '<b>' + this.x + '</b><br/>' +
+                            this.series.name + ': ' + this.y + '<br/>' +
+                            'Total: ' + this.point.stackTotal;
+                    }
+                },
+                plotOptions: {
+                    column: {
+                        stacking: 'normal',
+                        dataLabels: {
+                            enabled: true,
+                            color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'yellow',
+                            style: {
+                                textShadow: '0 0 3px black'
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Height',
+                    data: height
+                }, {
+                    name: 'Width',
+                    data: width
+                }]
+            });
+        }//end of success
+    });
+
+    $.ajax({
+        type: "GET",
+        url: "@routes.Google.getImages()",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify({}),
+        success: function (responseFour) {
+        console.log("High chart" + responseFour);
+
+            $('#heightWidthController').highcharts({
+                chart: {
+                    renderTo: 'heightWidthController',
+                    type: 'column'
+                },
+                title: {
+                    text: 'Height Width Details chart'
+                },
+                xAxis: {
+                    categories: ['Image1','Image2','Image3','Image4','Image5','Image6','Image7','Image8']
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Image Description'
+                    },
+                    stackLabels: {
+                        enabled: true,
+                        style: {
+                            fontWeight: 'bold',
+                            color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                        }
+                    }
+                },
+                legend: {
+                    align: 'right',
+                    x: -30,
+                    verticalAlign: 'top',
+                    y: 25,
+                    floating: true,
+                    backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+                    borderColor: '#CCC',
+                    borderWidth: 1,
+                    shadow: false
+                },
+                tooltip: {
+                    formatter: function () {
+                        return '<b>' + this.x + '</b><br/>' +
+                            this.series.name + ': ' + this.y + '<br/>' +
+                            'Total: ' + this.point.stackTotal;
+                    }
+                },
+                plotOptions: {
+                    column: {
+                        stacking: 'normal',
+                        dataLabels: {
+                            enabled: true,
+                            color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                            style: {
+                                textShadow: '0 0 3px black'
+                            }
+                        }
+                    }
+                },
+                series: responseFour
+            });
+        }//end of success
+    });
+
+    $.ajax({
+        type :  "GET",
+        dataType: 'json',
+        data: JSON.stringify({}),
+        contentType: "application/json; charset=utf-8",
+        url  :  "@routes.Google.getHeight()",
+        success: function(responseFive){
+            $('#heightContainer').highcharts({
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Height of Images in Google image api'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    name: "Heights",
+                    colorByPoint: true,
+                    data: [{
+                        name: "Image1",
+                        y: responseFive.Image1
+                    }, {
+                        name: "Image2",
+                        y: responseFive.Image2,
+                        sliced: true,
+                        selected: true
+                    }, {
+                        name: "Image3",
+                        y: responseFive.Image3
+                    }, {
+                        name: "Image4",
+                        y: responseFive.Image4
+                    }, {
+                        name: "Image5",
+                        y: responseFive.Image5
+                    },
+                     {
+                        name: "Image6",
+                        y: responseFive.Image6
+                    }, {
+                        name: "Image7",
+                        y: responseFive.Image7
+                    }, {
+                        name: "Image8",
+                        y: responseFive.Image8
+                    }]
+                }]
+            });
+        }//end of success
+    });
+
+    $.ajax({
+        type :  "GET",
+        dataType: 'json',
+        data: JSON.stringify({}),
+        contentType: "application/json; charset=utf-8",
+        url  :  "@routes.Google.getWidth()",
+        success: function(responseSix){
+            $('#widthContainer').highcharts({
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Width of Images in Google image api'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    name: "Widths",
+                    colorByPoint: true,
+                    data: [{
+                        name: "Image1",
+                        y: responseSix.Image1
+                    }, {
+                        name: "Image2",
+                        y: responseSix.Image2,
+                        sliced: true,
+                        selected: true
+                    }, {
+                        name: "Image3",
+                        y: responseSix.Image3
+                    }, {
+                        name: "Image4",
+                        y: responseSix.Image4
+                    }, {
+                        name: "Image5",
+                        y: responseSix.Image5
+                    },
+                     {
+                        name: "Image6",
+                        y: responseSix.Image6
+                    }, {
+                        name: "Image7",
+                        y: responseSix.Image7
+                    }, {
+                        name: "Image8",
+                        y: responseSix.Image8
+                    }]
+                }]
+            });
+        }//end of success
+    });
+    $.ajax({
+        type :  "GET",
+        dataType: 'json',
+        data: JSON.stringify({}),
+        contentType: "application/json; charset=utf-8",
+        url  :  "@routes.Google.getWidth()",
+        success: function(responseSix){
+            $('#widthContainer').highcharts({
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Width of Images in Google image api'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    name: "Widths",
+                    colorByPoint: true,
+                    data: [{
+                        name: "Image1",
+                        y: responseSix.Image1
+                    }, {
+                        name: "Image2",
+                        y: responseSix.Image2,
+                        sliced: true,
+                        selected: true
+                    }, {
+                        name: "Image3",
+                        y: responseSix.Image3
+                    }, {
+                        name: "Image4",
+                        y: responseSix.Image4
+                    }, {
+                        name: "Image5",
+                        y: responseSix.Image5
+                    },
+                     {
+                        name: "Image6",
+                        y: responseSix.Image6
+                    }, {
+                        name: "Image7",
+                        y: responseSix.Image7
+                    }, {
+                        name: "Image8",
+                        y: responseSix.Image8
+                    }]
+                }]
+            });
+        }//end of success
+    });
+
+
+}); //End of document.ready
+</script>
+</div>
+
+@helper.form(action = routes.Contacts.save()) {
+<div class="page_content">
+    <div class="formborder">
+        <fieldset>
+            <legend>Contact (@contactForm("name").valueOr("New"))</legend>
+            @helper.inputText(contactForm("name"), '_label -> "Name")
+            @helper.inputText(contactForm("email"),'_label -> "Email")
+            @helper.inputText(contactForm("number"),'_label -> "Number")
+            @helper.textarea(contactForm("message"), '_label -> "Message")
+            @inputRadioGroup(
+            contactForm("sex"),
+            options = Seq("M"->"Male","F"->"Female"),
+            '_label -> "Sex",
+            '_error -> contactForm("sex").
+            error.map(_.withMessage("select sex")),
+            '_class -> "Contacts")
+            @helper.inputText(contactForm("salary"),'_label -> "Salary")
+            @helper.inputText(contactForm("age"),'_label -> "Age")
+        </fieldset>
+        <input type="submit" class="btn btn-primary" value="Save">
+    </div>
+    <br>
+
+    <div id="genderChartContainer" class="row" style="height: 350px"></div>
+    <br/>
+
+    <div id="messageChartContainer" class="row" style="height: 350px"></div>
+    <br/>
+
+    <div id="heightWidthContainer" class="row" style="height: 350px"></div>
+    <br/>
+
+    <div id="heightWidthController" class="row" style="height: 350px"></div>
+    <br/>
+
+    <div id="heightContainer" class="row" style="height: 350px"></div>
+    <br/>
+
+    <div id="widthContainer" class="row" style="height: 350px"></div>
+    <br/>
+
+
+</div>
+</body>
+}
+}
+

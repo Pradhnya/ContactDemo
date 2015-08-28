@@ -1,0 +1,31 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+#GET     /                           controllers.Application.index()
+
+POST  /contacts/        controllers.Contacts.save()
+GET  /contacts/new/       controllers.Application.newContact()
+GET  /contacts/getCount/     controllers.Contacts.getContact()
+#GET  /contacts/getSal/     controllers.Contacts.getSalary()
+GET  /contacts/getMsg/     controllers.Contacts.getMessage()
+#GET  /services/get/     controllers.Services.getTrackInJSON
+
+# Tasks
+GET     /tasks                  controllers.Tasks.tasks()
+POST    /tasks                  controllers.Tasks.createTask()
+POST    /tasks/:id/delete       controllers.Tasks.deleteTask(id: Long)
+
+#GET    /helloworld        controllers.HelloWorldResourse.getClichedMessage()
+
+GET    /getImages        controllers.Google.getImages()
+
+GET    /getHeight        controllers.Google.getHeight()
+
+GET    /getWidth        controllers.Google.getWidth()
+
+#GET    /getWidth        controllers.Google.getDonutChart()
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)

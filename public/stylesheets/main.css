@@ -1,0 +1,46 @@
+body{
+    font-family: Arial, 'Lucida Sans Unicode';
+    line-height: 1.5;
+}
+
+.formborder {
+    border: solid 1px #000000;
+    border-radius: 25px;
+    border: 2px solid #CCC;
+    padding: 20px;
+    margin: 25px;
+}
+
+.page_content {
+   width: 100%;
+   position: absolute;
+   padding: 25px;
+}
+
+.h1{
+    padding: 25px;
+}
+
+.mainFooter{
+    width: 96%;
+    height: auto;
+    float: left;
+    border-radius: 5px;
+    background-color: #666;
+    margin: 25px;
+}
+
+.chartGender{
+    float: left;
+}
+
+.chartSal{
+    float: left;
+}
+
+.searchContent{
+    padding: 20px;
+    margin: 25px;
+    width: 100%;
+    float: left;
+}
